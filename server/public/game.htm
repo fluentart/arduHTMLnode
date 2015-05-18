@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<title>Lesson 1</title>
+		<style>
+			* { margin: 0; padding: 0;}
+			body { background: #111;}
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="/three.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+<script>
+    
+    var inputs;
+
+    var scene = new THREE.Scene()
+
+    //create and move our camera
+    var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10000 )
+    camera.position.z = 5
+    scene.add(camera)
+
+    //choose your renderer.. Canvas is more compatible, and WebGL offers more features
+    //var renderer = new THREE.CanvasRenderer()
+    var rendersettings = {}
+    rendersettings.antialias = true
+    var renderer = new THREE.WebGLRenderer(rendersettings)
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );           //adds the render output to the document
+
+
+    /*
+        OUR CUBE
+    */
+    //make cube, this creates the vertices for us. 1 unit size and 5 segments per side
+    var geometry = new THREE.CubeGeometry( 1, 1, 1, 4, 4, 4);
+    
+    //material settings
+    var matsettings = {}
+    matsettings.color = rgb(255,155,25) //rgb is a function we made, see below
+    matsettings.wireframe = 1
+
+    //create the material
+    var material = new THREE.MeshBasicMaterial( matsettings )    
+
+    //create the mesh with geometry and material ready
+    var mesh = new THREE.Mesh( geometry, material );
+    var mesh2 = new THREE.Mesh( geometry, material );
+    //add the cubemesh to the scene, you can have multiple scenes with different things inside each
+    scene.add( mesh );    
+    mesh.position.x -= 2;
+    mesh2.position.x +- 2;          
+    scene.add( mesh2 );
+
+    /*
+        RENDER FRAMES AND ANIMATE
+    */
+
+    animate();      //this runs the function animate() below
+
+    function animate() {
+        //do your animations in here
+    	//camera.rotation.z += 0.01     //adds 0.01 to the current camera rotation in z
+        //mesh.rotation.x += 0.03     //adds 0.01 to the current camera rotation in z
+        
+        // which then just keeps running because of threejs's requestAnimationFrame(animate) 
+        requestAnimationFrame( animate );         
+        renderer.render( scene, camera );
+    }
+
+    function update(input) {
+        mesh.rotation.x += parseFloat(input.g0x)/100000;
+        mesh.rotation.y += parseFloat(input.g0y)/100000;
+        mesh.rotation.z += parseFloat(input.g0z)/100000;        
+        mesh2.rotation.x += parseFloat(input.g1x)/100000;
+        mesh2.rotation.y += parseFloat(input.g1y)/100000;
+        mesh2.rotation.z += parseFloat(input.g1z)/100000;
+    }
+
+    /*
+        HELPER FUNCTIONS
+    */
+
+    function rgb(red,green,blue) {
+        var r = Math.round( red * Math.random() )
+        var g = Math.round( green * Math.random() )
+        var b = Math.round( blue * Math.random() )
+        return "rgb("+r+","+g+","+b+")"
+    }
+
+
+    /* SOCKET.IO */
+      var socket = io();
+      socket.on('arduino', function (data) {
+        console.log(data);
+        update(data);
+        //socket.emit('my other event', { my: 'data' });
+      });
+
+
+</script>
+	</body>
+</html>
