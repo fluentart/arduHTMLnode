@@ -1,8 +1,16 @@
+ARDUINO DUE GYRO TO 3D
+
+Here I'll show you how to connect multiple i2c sensors to the browser for easy visualisation. The firmware contains custom i2c code to handle any pin on the DUE. I hope you find this useful!
+
 ![Imgur](http://i.imgur.com/45LmN5Y.jpg)
 
 We connect two gyro sensors to two 3D cubes in the browser and control them in realtime.
 
-## How to use
+## Download
+
+Sourcecode: [https://github.com/fluentart/arduHTMLnode](https://github.com/fluentart/arduHTMLnode)
+
+## How to 
 
 ![Imgur](http://i.imgur.com/5CQfA8g.jpg)
 
