@@ -22,12 +22,14 @@ This will give it a different address on the I2C bus, avoiding conflict with the
 
 ![Imgur](http://i.imgur.com/peCnty7.jpg)
 
-* Arduino pin 8 to IMU SCL (both of your gyro sensors)
-* Arduino pin 9 to IMU SDA (both of your gyro sensors)
-* Arduino 3.3V to IMU VIN (both of your gyro sensors)
-* Arduino GND to IMU GND (both of your gyro sensors)
-* 4.7kOhm resistor connecting SCL and 3.3V
-* 4.7kOhm resistor connecting GND and 3.3V
+```
+Arduino pin 8 to IMU SCL (both of your gyro sensors)
+Arduino pin 9 to IMU SDA (both of your gyro sensors)
+Arduino GND to IMU GND (both of your gyro sensors)
+Arduino 3.3V to IMU VIN (both of your gyro sensors)
+4.7kOhm resistor connecting SCL and 3.3V
+4.7kOhm resistor connecting SDA and 3.3V
+```
 
 The resistors can be as low as 1k Ohm, they are called pullup resistors in this case, and help to keep the data lines HIGH. This is part of I2C spec.
 
