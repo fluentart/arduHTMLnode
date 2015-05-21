@@ -95,7 +95,7 @@ var datahandler = function (data) {
 }
 
 scraper.on('data', function (data) {
-  console.log(data)   
+  console.log(data);
   io.sockets.emit("arduino", data)
 });
 
