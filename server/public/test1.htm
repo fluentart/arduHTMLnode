@@ -18,8 +18,7 @@
 
     //create and move our camera
     var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10000 )
-    camera.position.x = 0;
-    camera.position.z = 50
+    camera.position.z = 5
     scene.add(camera)
 
     //choose your renderer.. Canvas is more compatible, and WebGL offers more features
@@ -35,26 +34,24 @@
         OUR CUBE
     */
     //make cube, this creates the vertices for us. 1 unit size and 5 segments per side
-    var geometry = new THREE.CubeGeometry( 1, 10, 10, 4, 4, 4);
+    var geometry = new THREE.CubeGeometry( 1, 1, 1, 4, 4, 4);
+    
     //material settings
     var matsettings = {}
-    matsettings.color = rgb(255,75,25); 
+    matsettings.color = rgb(255,155,25) //rgb is a function we made, see below
     matsettings.wireframe = 1
-    var matsettings2 = {}
-    matsettings2.color = rgb(25,75,255); 
-    matsettings2.wireframe = 1
+
     //create the material
-    var material = new THREE.MeshBasicMaterial( matsettings ); 
-    var material2 = new THREE.MeshBasicMaterial( matsettings2 );
+    var material = new THREE.MeshBasicMaterial( matsettings )    
+
     //create the mesh with geometry and material ready
     var mesh = new THREE.Mesh( geometry, material );
-    var mesh2 = new THREE.Mesh( geometry, material2 );
+    var mesh2 = new THREE.Mesh( geometry, material );
     //add the cubemesh to the scene, you can have multiple scenes with different things inside each
-    scene.add( mesh );  
+    scene.add( mesh );    
+    mesh.position.x -= 2;
+    mesh2.position.x +- 2;          
     scene.add( mesh2 );
-    mesh.position.x = -25;
-    mesh2.position.x = 25;          
-
 
     /*
         RENDER FRAMES AND ANIMATE
@@ -72,35 +69,26 @@
         renderer.render( scene, camera );
     }
 
-    var defaultgyro;
+    var prevaccel;
     function update(input) {
-        if (input.g0x) {
-                if (defaultgyro == undefined ) {
-                    defaultgyro = input;
+        if (input.a0x) {
+                if (prevaccel == undefined ) {
+                    prevaccel = input;
                 }
+  
 
-                defaultgyro.g0x = defaultgyro.g0x*0.9 + input.g0x*0.1;
-                input.g0z -= defaultgyro.g0z;
-                input.g0x -= defaultgyro.g0x;
-                mesh2.position.y *= 0.95;
-                mesh2.position.y -= input.g0z/1000;
-                mesh2.rotation.z *= 0.95;
-                mesh2.rotation.z -= input.g0x/25000;
-    
+                mesh2.position.x += (input.a0x-prevaccel.a0x)/100000;
+                mesh2.position.y += (input.a0y-prevaccel.a0y)/100000;
+                mesh2.position.z += (input.a0z-prevaccel.a0z)/100000;
 
-                defaultgyro.g1x = defaultgyro.g1x*0.9 + input.g1x*0.1;
-                input.g1z -= defaultgyro.g1z;
-                input.g1x -= defaultgyro.g1x;
-                mesh.position.y *= 0.95;
-                mesh.position.y += input.g1z/1000;
-                mesh.rotation.z *= 0.95;
-                mesh.rotation.z -= input.g1x/25000;
-        
+                mesh.position.x += (input.a1x-prevaccel.a1x)/1000000;
+                mesh.position.y += (input.a1y-prevaccel.a1y)/1000000;
+                mesh.position.z += (input.a1z-prevaccel.a1z)/1000000;    
+
+                prevaccel = input;            
            
 
         }
-
-        /*
         if (input.g0x) {
             mesh.rotation.x += parseFloat(input.g0x)/100000;
             mesh.rotation.y += parseFloat(input.g0y)/100000;
@@ -108,7 +96,7 @@
             mesh2.rotation.x += parseFloat(input.g1x)/100000;
             mesh2.rotation.y += parseFloat(input.g1y)/100000;
             mesh2.rotation.z += parseFloat(input.g1z)/100000;
-        }*/
+        }
 
     }
 
@@ -117,9 +105,9 @@
     */
 
     function rgb(red,green,blue) {
-        var r = Math.round( red )
-        var g = Math.round( green )
-        var b = Math.round( blue )
+        var r = Math.round( red * Math.random() )
+        var g = Math.round( green * Math.random() )
+        var b = Math.round( blue * Math.random() )
         return "rgb("+r+","+g+","+b+")"
     }
 
